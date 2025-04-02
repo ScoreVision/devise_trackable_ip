@@ -14,13 +14,14 @@ module DeviseTrackableIp
       end
 
       def create_migration_file
-        migration_template 'create_user_ip_addresses.rb', "db/migrate/create_#{DeviseTrackableIp.table_name}.rb"
+        model = DeviseTrackableIp.table_name.downcase
+        migration_template 'create_trackable_ip_addresses.rb.erb', "db/migrate/create_#{model}.rb", assigns: {table: model}
       end
 
       def inject_devise_trackable_ip_content
-        path = File.join('app', 'models', "#{options[:model]}.rb")
+        path = File.join('app', 'models', "#{options[:model].downcase}.rb")
         if File.exist?(path)
-          inject_into_file(path, after: "devise :database_authenticatable,") do
+          inject_into_file(path, after: /devise .* :database_authenticatable,/) do
             "\n         :trackable_ip,"
           end
         else

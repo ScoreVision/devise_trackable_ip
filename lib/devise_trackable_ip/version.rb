@@ -1,4 +1,4 @@
 # lib/devise-trackable-ip/version.rb
 module DeviseTrackableIp
-  VERSION = '0.5.0'
+  VERSION = '4.9.1'.freeze
 end

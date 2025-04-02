@@ -5,7 +5,7 @@ require 'active_job'
 
 module DeviseTrackableIp
   autoload :Schema, 'devise_trackable_ip/schema'
-  autoload :TrackableIp, 'devise_trackable_ip/trackable_ip'
+  #  autoload :TrackableIp, 'devise_trackable_ip/trackable_ip'
   autoload :CleanUpJob, 'devise_trackable_ip/clean_up_job'
 
   module Models
@@ -17,7 +17,7 @@ module DeviseTrackableIp
   end
 
   def self.table_name
-    @table_name || :user_ip_addresses
+    @table_name || 'trackable_ips'
   end
 
   def self.table_name=(table_name)
@@ -33,7 +33,7 @@ module DeviseTrackableIp
   end
 
   def self.schedule_cleanup
-    DeviseTrackableIp::CleanUpJob.set(wait: 1.day).perform_later unless DeviseTrackableIp::CleanUpJob.job_exists?
+    DeviseTrackableIp::CleanUpJob.set(wait: 6.hours).perform_later
   end
 
   def self.cleanup_now
@@ -41,4 +41,12 @@ module DeviseTrackableIp
   end
 end
 
-Devise.add_module :trackable_ip, model: 'devise-trackable-ip/models/trackable_ip'
+Devise.add_module :trackable_ip, strategy: false, model: 'devise/models/trackable_ip'
+
+
+# devise.add_module(:ldap_authenticatable, {
+#   strategy: true,
+#   controller: :sessions,
+#   model: 'devise/models/ldap_authenticatable',
+#   route: :session
+# })
