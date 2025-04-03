@@ -1,6 +1,6 @@
 # Devise Trackable Ip
 
-This gem aims to expand on  ip tracking of a user login/failure. It will keep the desired age or amount of attempts along with their outcome result.
+This gem aims to expand on  ip tracking of a user login/failure. It will keep the desired age or amount of attempts along with their outcome result. I originally intended for this to be useful on other models than just User however, some of the logic is married to the form fields at present so may require some tweaking for your application.
 
 To Install, include the gem in your gemfile and run the generator.
 ```
