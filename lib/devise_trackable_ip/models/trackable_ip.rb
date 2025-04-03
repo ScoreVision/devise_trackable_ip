@@ -22,8 +22,32 @@ module DeviseTrackableIp
         self
       end
 
+      def add_visit(timestamp)
+        jsob = self.visited_at
+        jsob << timestamp.to_i
+        new_sort = jsob.reject {|t| t < DeviseTrackableIp.retention_period.ago.to_i}.sort
+        if new_sort.length > DeviseTrackableIp.max_visits_retained_per_user_ip
+          new_sort.shift(new_sort.length-DeviseTrackableIp.max_visits_retained_per_user_ip)
+        end
+        self.visited_at=new_sort
+      end
+
+      def visited_at
+        obj = read_attribute(:visited_at)
+        case obj.class.name
+        when 'NilClass'
+          []
+        when 'String'
+          JSON.parse(obj)
+        else
+          obj
+        end
+      end
+
       def ip_address
-        IPAddr.new(read_attribute(:ip_address), read_attribute(:ip_address_type))
+        unless read_attribute(:ip_address).nil?
+          IPAddr.new(read_attribute(:ip_address).to_i, read_attribute(:ip_address_type))
+        end
       end
     end
   end

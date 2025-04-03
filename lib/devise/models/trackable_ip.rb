@@ -14,10 +14,12 @@ module Devise
       def update_tracked_ip(request)
         return unless request.remote_ip
 
-        ip_address = request.remote_ip
+        ip_address = IPAddr.new(request.remote_ip)
         current_time = Time.current.utc
 
-        trackable_ips.new(visited_at: current_time).fields_from_string_ip(ip_address).save!
+        record = trackable_ips.find_or_create_by(ip_address: ip_address.to_i, ip_address_type: ip_address.family)
+        record.add_visit(current_time)
+        record.save
       end
     end
   end

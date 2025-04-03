@@ -24,6 +24,14 @@ module DeviseTrackableIp
     @table_name = table_name
   end
 
+  def self.max_visits_retained_per_user_ip
+    @max_visits_retained_per_user_ip || 1000
+  end
+
+  def self.max_visits_retained_per_user_ip=(value)
+    @max_visits_retained_per_user_ip = value
+  end
+
   def self.retention_period
     @retention_period || 6.months
   end

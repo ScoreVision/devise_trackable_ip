@@ -10,7 +10,7 @@ module DeviseTrackableIp
         t.string :trackable_type, null: false
         t.binary :ip_address, null: false, limit: 16
         t.integer :ip_address_type, null: false
-        t.datetime :visited_at, null: false
+        t.json :visited_at, null: false
 
         t.index %i[trackable_id trackable_type]
         t.index %i[trackable_id trackable_type ip_address ip_address_type]
