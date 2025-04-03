@@ -4,6 +4,18 @@ module DeviseTrackableIp
     class TrackableIp < ActiveRecord::Base
       self.table_name = DeviseTrackableIp.table_name
 
+      serialize :visited_at, coder: JSON, type: Array
+
+      SUCCESS = 0
+      FAILURE = 1
+      UNCONFIRMED = 2
+
+      STATUS_LOOKUP = {
+        0 => SUCCESS,
+        1 => FAILURE,
+        2 => UNCONFIRMED,
+      }.freeze
+
       # Todo: This needs to be dynamic based on the class that devise_for is applied to
       belongs_to :trackable, polymorphic: true
 
@@ -22,14 +34,15 @@ module DeviseTrackableIp
         self
       end
 
-      def add_visit(timestamp)
+      def add_visit(timestamp, success)
         jsob = self.visited_at
-        jsob << timestamp.to_i
-        new_sort = jsob.reject {|t| t < DeviseTrackableIp.retention_period.ago.to_i}.sort
-        if new_sort.length > DeviseTrackableIp.max_visits_retained_per_user_ip
-          new_sort.shift(new_sort.length-DeviseTrackableIp.max_visits_retained_per_user_ip)
-        end
-        self.visited_at=new_sort
+        jsob << [timestamp.to_i, success]
+        # Weird ruby hash.keys behaviour that turns integer keys into strings when you call .keys?
+        jsob.reject! {|x| x[0] < DeviseTrackableIp.retention_period.ago.to_i}
+        # turn them back into ints i guess?
+        jsob.sort! {|a,b| a[0] <=> b[0]}
+        jsob.shift while jsob.length > DeviseTrackableIp.max_visits_retained_per_user_ip
+        self.visited_at=jsob
       end
 
       def visited_at
