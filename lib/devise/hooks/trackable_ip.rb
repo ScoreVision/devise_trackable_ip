@@ -6,7 +6,7 @@
 # not trigger it.
 Warden::Manager.after_set_user except: :fetch do |record, warden, options|
   if record.respond_to?(:update_tracked_ip) && warden.authenticated?(options[:scope]) && !warden.request.env['devise.skip_trackable']
-    record.update_tracked_ip(warden.request, true)
+    record.update_tracked_ip(warden.request, DeviseTrackableIp::Models::TrackableIp::SUCCESS)
   end
 end
 
