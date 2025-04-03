@@ -16,14 +16,14 @@ module DeviseTrackableIp
         where('visited_at < ?', older_than).delete_all
       end
 
-      def ip_address=(ip_address)
-        input = IPAddr.new(ip_address)
-        self.ip_address = input.to_i
-        self.ip_address_type = input.family
+      def fields_from_string_ip(ip_str)
+        input = IPAddr.new(ip_str)
+        assign_attributes(ip_address: input.to_i, ip_address_type: input.family)
+        self
       end
 
       def ip_address
-        IPAddr.new(self.ip_address, self.ip_address_type)
+        IPAddr.new(read_attribute(:ip_address), read_attribute(:ip_address_type))
       end
     end
   end

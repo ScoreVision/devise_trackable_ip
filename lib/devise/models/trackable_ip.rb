@@ -17,7 +17,7 @@ module Devise
         ip_address = request.remote_ip
         current_time = Time.current.utc
 
-        trackable_ips.create(ip_address: ip_address, visited_at: current_time)
+        trackable_ips.new(visited_at: current_time).fields_from_string_ip(ip_address).save!
       end
     end
   end
