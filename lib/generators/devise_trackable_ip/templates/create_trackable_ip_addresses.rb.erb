@@ -1,4 +1,4 @@
-# lib/generators/devise-trackable-ip/templates/create_user_ip_addresses.rb
+# lib/generators/devise-trackable-ip/templates/create_user_ip_addresses.rb.erb
 class Create<%= DeviseTrackableIp.table_name.to_s.camelize %> < ActiveRecord::Migration[<%= ActiveRecord::VERSION::MAJOR %>.<%= ActiveRecord::VERSION::MINOR %>]
 def change
   <%= DeviseTrackableIp::Schema.new.trackable_ip(table: @table) %>
