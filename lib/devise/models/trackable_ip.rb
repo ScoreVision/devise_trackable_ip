@@ -25,7 +25,7 @@ module Devise
       end
 
       def login_history
-        trackable_ips.map {|x| x.visited_at.map {|y| [Time.at(y[0]).to_datetime, x.ip_address.to_s, y[1]]}}
+        trackable_ips.map {|x| x.visited_at.map {|y| [Time.at(y[0]).to_datetime, x.ip_address.to_s, DeviseTrackableIp::Models::TrackableIp::STATUS_LOOKUP[y[1]]]}}
          .reduce(:concat)
          .sort {|x,y| x[0] <=> y[0]}
       end

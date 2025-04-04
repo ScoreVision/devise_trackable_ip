@@ -11,9 +11,9 @@ module DeviseTrackableIp
       UNCONFIRMED = 2
 
       STATUS_LOOKUP = {
-        0 => SUCCESS,
-        1 => FAILURE,
-        2 => UNCONFIRMED,
+        0 => 'success',
+        1 => 'failure',
+        2 => 'unconfirmed',
       }.freeze
 
       # Todo: This needs to be dynamic based on the class that devise_for is applied to
